@@ -28,9 +28,9 @@ const pet = {
   "current": "idle",
   "duration": animation_durations["idle"],
   "pos": 0,
-  "random_walk": false,
-  "sleep": false,
-  "inactive_time": 0,
+  "active": false,
+  "autoDuration": 0,
+  "autoMode": "random_walk",
 };
 
 pet.img.src = get_gif(pet.current);
@@ -98,60 +98,77 @@ async function intro_walk(){
 
 //? RANDOM WALK
 async function random_walk(){
-  while (pet.random_walk){
-    let random_pos = Math.ceil(Math.random() * 800) - 400
-    // console.log(random_pos);
-    await delay(1000);
-    await walk_pet(random_pos);
-  }
+  let random_pos = Math.ceil(Math.random() * 800) - 400
+  await delay(1000);
+  await walk_pet(random_pos);
 }
 
 //! SLEEP ANIMATION
-// function sleep_pet(){
-//   pet.sleep = true;
-//   pet.inactive_time = 0;
+async function sleep_pet(){
 
-//   pet.img.src = get_gif("sleep");
-//   pet.duration = animation_durations["sleep"];
-
-//   setTimeout(() => {
-//     pet.img.src = animation_path + "sleeping.png";
-//   }, pet.duration);
-
-//   console.log("PET HAS SLEPT");
-// }
-
-// function wake_up_pet(){
-//   pet.sleep = false;
-//   pet.inactive_time = 0;
-//   console.log("PET HAS WOKEN UP");
-// }
-
-// async function pet_watcher(){
-//   setInterval(async () => {
-//     if (!pet.sleep){
-//       pet.inactive_time += 100;
-//     }
-//     if (pet.inactive_time > max_inactive_time){
-//       sleep_pet();
-//     }
-//   }, 100)
-// }
+}
 
 
+//! ANIMATION CONTROLLER
+
+async function auto_animation_controller(){
+  const autoModes = [random_walk];
+
+  while(true){
+    if(pet.active){
+      if(pet.pos != 0){
+        await walk_pet(0);
+        continue;
+      }
+
+      await delay(500);
+      continue;
+    }
+
+    if(pet.autoDuration <= 0){
+      // select random duration for auto mode
+      pet.autoDuration = Math.ceil(Math.random() * 8);
+      // select Random auto mode
+      let randomMode = Math.floor(Math.random() * autoModes.length);
+      pet.autoMode = autoModes[randomMode];
+      console.log(`Mode: ${pet.autoMode}`);
+    }
+    else{
+      await pet.autoMode();
+      pet.autoDuration -= 1;
+    }
+    console.log("waiting");
+  }
+
+  // while(pet.active){
+  //   await delay(500);
+  // }
+
+  // auto_animation_controller();
+}
 
 
 
 //! ASYNC PET ANIMATIONS
 async function run_async_pet(){
-  // await random_walk();
-  await intro_walk();
-  console.log("Intro");
+  // await intro_walk();
+  // console.log("Intro");
+  await auto_animation_controller();
 }
 
 function main_pet_animation(){
   // pet animations
   run_async_pet();
+
+  setTimeout(() => {
+    console.log("Activating");
+    pet.active = true;
+  }, 8000);
+
+  setTimeout(() => {
+    console.log("Inactivating");
+    pet.active = false;
+  }, 16000);
 
   // sleep timer
   // pet_watcher();
