@@ -1,5 +1,5 @@
 //! Global vars
-const max_awake_time = 8000;
+const max_inactive_time = 8000;
 
 const animation_durations = {
   "angry": 1100,
@@ -30,7 +30,7 @@ const pet = {
   "pos": 0,
   "random_walk": false,
   "sleep": false,
-  "awake_time": 0,
+  "inactive_time": 0,
 };
 
 pet.img.src = get_gif(pet.current);
@@ -107,23 +107,29 @@ async function random_walk(){
 }
 
 //! SLEEP ANIMATION
-async function sleep_pet(){
-  console.log("SLEPT");
-  await delay(1000);
-  pet.awake_time = 0;
-  return;
+function sleep_pet(){
+  pet.sleep = true;
+  pet.inactive_time = 0;
+  console.log("PET HAS SLEPT");
+}
+
+function wake_up_pet(){
+  pet.sleep = false;
+  pet.inactive_time = 0;
+  console.log("PET HAS WOKEN UP");
 }
 
 async function pet_watcher(){
-  const awake_interval = setInterval(async () => {
-    pet.awake_time += 100
-    if (pet.awake_time > max_awake_time){
-      clearInterval(awake_interval);
-      await sleep_pet();
-      pet_watcher();
+  setInterval(async () => {
+    if (!pet.sleep){
+      pet.inactive_time += 100;
     }
-  }, 100);
+    if (pet.inactive_time > max_inactive_time){
+      sleep_pet();
+    }
+  }, 100)
 }
+
 
 
 
@@ -132,12 +138,19 @@ async function pet_watcher(){
 async function run_async_pet(){
   // await random_walk();
   await intro_walk();
-  console.log("Walked");
+  console.log("Intro");
 }
 
 function main_pet_animation(){
+  // pet animations
   run_async_pet();
+
+  // sleep timer
   pet_watcher();
+
+  setTimeout(() => {
+    wake_up_pet();
+  }, 12000)
 
 }
 
