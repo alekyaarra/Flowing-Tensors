@@ -1,4 +1,5 @@
-  const animation_durations = {
+//! Global vars
+const animation_durations = {
   "angry": 1100,
   "idle": 800,
   "walk": 800,
@@ -10,15 +11,16 @@
 }
 const animation_path = "./assets/";
 
+
+//! Helper function
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 function get_gif(name){
   return animation_path + name + ".gif";
 }
 
-// Helper function
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-
-// Pet vars
+//! Pet vars
 const pet = {
   "img": document.createElement("img"),
   "current": "idle",
@@ -30,11 +32,11 @@ const pet = {
 pet.img.src = get_gif(pet.current);
 pet.img.style.width = "160px";
 
-
 const pet_container = document.getElementById("pet-container");
 pet_container.appendChild(pet.img);
 
 
+//! PET SEMAPHORE METHODS
 function animate_pet(name){
   if (name == "sleep"){
     return;
@@ -45,13 +47,8 @@ function animate_pet(name){
   pet.duration = animation_durations[pet.current];
 }
 
-function intro_pet(steps = 3, distance = 400){
-  // pet.img.style.translate = `${distance}px 0`;
-  
 
-}
-
-
+//! WALK ANIMATION
 async function walk_pet(new_pos = 400, idle = true){
   let distance = new_pos - pet.pos;
   if( distance == 0){
@@ -85,10 +82,8 @@ async function walk_pet(new_pos = 400, idle = true){
   })
 }
 
+//? INTRO WALK
 async function intro_walk(){
-  await delay(2000);
-  await walk_pet(400);
-  await delay(1000);
   await walk_pet(200);
   await delay(1000);
   await walk_pet(-200);
@@ -96,6 +91,7 @@ async function intro_walk(){
   await walk_pet(0);
 }
 
+//? RANDOM WALK
 async function random_walk(){
   while (pet.random_walk){
     let random_pos = Math.ceil(Math.random() * 800) - 400
@@ -106,15 +102,19 @@ async function random_walk(){
 }
 
 
-async function run(){
-  await random_walk();
+//! ASYNC PET ANIMATIONS
+async function run_async_pet(){
+  // await random_walk();
+  await intro_walk();
   console.log("Walked");
 }
 
+
+//! MAIN
 function main(){
   // Animation loop 
-  run();
-  
+  run_async_pet();
+
 }
 main();
 
