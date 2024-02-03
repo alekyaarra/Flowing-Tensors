@@ -8,7 +8,7 @@ const animation_durations = {
   "no": 700,
   "yes": 900,
   "prance": 1100,
-  "sleep": 1000,
+  "sleep": 800,
   "bark": 600,
 }
 const animation_path = "./assets/";
@@ -30,7 +30,7 @@ const pet = {
   "pos": 0,
   "active": false,
   "autoDuration": 0,
-  "autoMode": "random_walk",
+  "autoMode": "none",
 };
 
 pet.img.src = get_gif(pet.current);
@@ -103,41 +103,72 @@ async function random_walk(){
   await walk_pet(random_pos);
 }
 
+//? IDLE ANIMATION
+async function idle_pet(){
+  if(pet.pos != 0){
+    await walk_pet(0);
+  }
+  else{
+    animate_pet("idle");
+  }
+}
+
+
 //! SLEEP ANIMATION
 async function sleep_pet(){
+  if (pet.pos != 0){
+    await walk_pet(0);
+    return;
+  }
 
+  if(pet.current == "sleep"){
+    await delay(1500);
+    return;
+  }
+
+  pet.img.src = get_gif("sleep");
+  pet.duration = animation_durations["sleep"];
+  pet.current = "sleep";
+  await delay(pet.duration);
+  pet.img.src = animation_path + "sleeping.png";
 }
 
 
 //! ANIMATION CONTROLLER
+async function inactive_animation_controller(){
+  const autoModes = [random_walk, sleep_pet];
+  console.log(pet.autoMode.name, pet.autoDuration);
+  
+  if(pet.autoDuration <= 0){
+    // select random duration for auto mode
+    pet.autoDuration = Math.ceil(Math.random() * 4);
+    // select Random auto mode
+    let randomMode = Math.floor(Math.random() * autoModes.length);
+    pet.autoMode = autoModes[randomMode];
+  }
+  else{
+    await pet.autoMode();
+    pet.autoDuration -= 1;
+  }
+}
+
 
 async function auto_animation_controller(){
-  const autoModes = [random_walk];
 
   while(true){
     if(pet.active){
-      if(pet.pos != 0){
-        await walk_pet(0);
-        continue;
-      }
+      console.log("Active");
+      await idle_pet();
+      // if(pet.pos != 0){
+      //   await walk_pet(0);
+      //   continue;
+      // }
 
       await delay(500);
       continue;
     }
 
-    if(pet.autoDuration <= 0){
-      // select random duration for auto mode
-      pet.autoDuration = Math.ceil(Math.random() * 8);
-      // select Random auto mode
-      let randomMode = Math.floor(Math.random() * autoModes.length);
-      pet.autoMode = autoModes[randomMode];
-      console.log(`Mode: ${pet.autoMode}`);
-    }
-    else{
-      await pet.autoMode();
-      pet.autoDuration -= 1;
-    }
-    console.log("waiting");
+    await inactive_animation_controller();
   }
 
   // while(pet.active){
@@ -160,15 +191,15 @@ function main_pet_animation(){
   // pet animations
   run_async_pet();
 
-  setTimeout(() => {
-    console.log("Activating");
-    pet.active = true;
-  }, 8000);
+  // setTimeout(() => {
+  //   console.log("Activating");
+  //   pet.active = true;
+  // }, 8000);
 
-  setTimeout(() => {
-    console.log("Inactivating");
-    pet.active = false;
-  }, 16000);
+  // setTimeout(() => {
+  //   console.log("Inactivating");
+  //   pet.active = false;
+  // }, 16000);
 
   // sleep timer
   // pet_watcher();
@@ -182,6 +213,13 @@ function main(){
 
 }
 main();
+
+window.addEventListener("mousedown", () => {
+  pet.active = true;
+})
+window.addEventListener("mouseup", () => {
+  pet.active = false;
+})
 
 
 
