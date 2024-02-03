@@ -99,8 +99,8 @@ async function intro_walk(){
 //? RANDOM WALK
 async function random_walk(){
   let random_pos = Math.ceil(Math.random() * 800) - 400
-  await delay(1000);
   await walk_pet(random_pos);
+  await delay(1000);
 }
 
 //? IDLE ANIMATION
