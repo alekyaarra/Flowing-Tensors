@@ -1,6 +1,4 @@
 //! Global vars
-const max_inactive_time = 8000;
-
 const animation_durations = {
   "angry": 1100,
   "idle": 800,
@@ -21,6 +19,8 @@ function get_gif(name){
   return animation_path + name + ".gif";
 }
 
+const dev_header = document.getElementById("dev-header");
+
 
 //! Pet vars
 const pet = {
@@ -29,6 +29,7 @@ const pet = {
   "duration": animation_durations["idle"],
   "pos": 0,
   "active": false,
+  "bark": true,
   "autoDuration": 0,
   "autoMode": "none",
 };
@@ -50,6 +51,8 @@ function animate_pet(name){
   pet.img.src = get_gif(name);
   pet.current = name;
   pet.duration = animation_durations[pet.current];
+
+  dev_header.innerHTML = name;
 }
 
 
@@ -131,10 +134,27 @@ async function sleep_pet(){
   pet.current = "sleep";
   await delay(pet.duration);
   pet.img.src = animation_path + "sleeping.png";
+
+  dev_header.innerHTML = "sleep";
+}
+
+//! BARK ANIMATION
+async function bark_pet(){
+  if(pet.bark){
+    return new Promise( resolve => {
+      animate_pet("bark");
+      resolve();
+    })
+  }
+  else{
+    await idle_pet();
+  }
 }
 
 
 //! ANIMATION CONTROLLER
+
+//? INACTIVE ANIMATION CONTROLLER
 async function inactive_animation_controller(){
   const autoModes = [random_walk, sleep_pet];
   console.log(pet.autoMode.name, pet.autoDuration);
@@ -152,23 +172,22 @@ async function inactive_animation_controller(){
   }
 }
 
+//? ACTIVE ANIMATION CONTROLLER
+async function active_animation_controller(){
+  console.log("Active");
+  await bark_pet();
+  await delay(500);
+}
 
+//? AUTO ANIMATION CONTROLLER ( MAIN CONTROLLER )
 async function auto_animation_controller(){
-
   while(true){
     if(pet.active){
-      console.log("Active");
-      await idle_pet();
-      // if(pet.pos != 0){
-      //   await walk_pet(0);
-      //   continue;
-      // }
-
-      await delay(500);
-      continue;
+      await active_animation_controller();
     }
-
-    await inactive_animation_controller();
+    else{
+      await inactive_animation_controller();
+    }
   }
 
   // while(pet.active){

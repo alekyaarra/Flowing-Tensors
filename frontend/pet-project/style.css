@@ -28,7 +28,7 @@ body{
   justify-content: center;
   align-items: center;
   flex-direction: column; 
-  gap: 5em;
+  gap: 3em;
 }
 
 
@@ -38,4 +38,32 @@ body{
   width: 100%;
   display: flex;
   justify-content: center;
+}
+
+.float-down{
+  animation: float-down 2s ease-in forwards;
+}
+@keyframes float-down {
+  from{
+    translate: 0;
+    opacity: 1;
+  }
+  to{
+    translate: 0 100%;
+    opacity: 0;
+  }
+}
+
+.float-up{
+  animation: float-up 2s ease-in forwards;
+}
+@keyframes float-up {
+  from{
+    translate: 0;
+    opacity: 1;
+  }
+  to{
+    translate: 0 -100%;
+    opacity: 0;
+  }
 }
