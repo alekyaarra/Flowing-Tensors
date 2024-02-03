@@ -107,28 +107,36 @@ async function random_walk(){
 }
 
 //! SLEEP ANIMATION
-function sleep_pet(){
-  pet.sleep = true;
-  pet.inactive_time = 0;
-  console.log("PET HAS SLEPT");
-}
+// function sleep_pet(){
+//   pet.sleep = true;
+//   pet.inactive_time = 0;
 
-function wake_up_pet(){
-  pet.sleep = false;
-  pet.inactive_time = 0;
-  console.log("PET HAS WOKEN UP");
-}
+//   pet.img.src = get_gif("sleep");
+//   pet.duration = animation_durations["sleep"];
 
-async function pet_watcher(){
-  setInterval(async () => {
-    if (!pet.sleep){
-      pet.inactive_time += 100;
-    }
-    if (pet.inactive_time > max_inactive_time){
-      sleep_pet();
-    }
-  }, 100)
-}
+//   setTimeout(() => {
+//     pet.img.src = animation_path + "sleeping.png";
+//   }, pet.duration);
+
+//   console.log("PET HAS SLEPT");
+// }
+
+// function wake_up_pet(){
+//   pet.sleep = false;
+//   pet.inactive_time = 0;
+//   console.log("PET HAS WOKEN UP");
+// }
+
+// async function pet_watcher(){
+//   setInterval(async () => {
+//     if (!pet.sleep){
+//       pet.inactive_time += 100;
+//     }
+//     if (pet.inactive_time > max_inactive_time){
+//       sleep_pet();
+//     }
+//   }, 100)
+// }
 
 
 
@@ -146,12 +154,7 @@ function main_pet_animation(){
   run_async_pet();
 
   // sleep timer
-  pet_watcher();
-
-  setTimeout(() => {
-    wake_up_pet();
-  }, 12000)
-
+  // pet_watcher();
 }
 
 
