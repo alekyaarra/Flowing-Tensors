@@ -1,4 +1,4 @@
-const animation_durations = {
+  const animation_durations = {
   "angry": 1100,
   "idle": 800,
   "walk": 800,
@@ -24,6 +24,7 @@ const pet = {
   "current": "idle",
   "duration": animation_durations["idle"],
   "pos": 0,
+  "random_walk": true,
 };
 
 pet.img.src = get_gif(pet.current);
@@ -52,11 +53,15 @@ function intro_pet(steps = 3, distance = 400){
 
 
 async function walk_pet(new_pos = 400, idle = true){
-  let steps = 3;
-  let direction = Math.sign(pet.pos - new_pos);
-  // let walk_duration = animation_durations["walk"] * (steps + 1);
-  let walk_duration = Math.abs(pet.pos - new_pos) * 8;
-  console.log(walk_duration);
+  let distance = new_pos - pet.pos;
+  if( distance == 0){
+    return;
+  }
+
+  let direction = Math.sign(distance);
+  let walk_duration = Math.abs(distance) * 8;
+
+  pet.img.style.transform = `scaleX(${direction})`;
 
   animate_pet("walk");
   await delay(50);
@@ -80,22 +85,34 @@ async function walk_pet(new_pos = 400, idle = true){
   })
 }
 
-async function run(){
-  await delay(1500);
-  await walk_pet();
+async function intro_walk(){
+  await delay(2000);
+  await walk_pet(400);
   await delay(1000);
   await walk_pet(200);
+  await delay(1000);
+  await walk_pet(-200);
+  await delay(1000);
+  await walk_pet(0);
+}
+
+async function random_walk(){
+  while (pet.random_walk){
+    let random_pos = Math.ceil(Math.random() * 800) - 400
+    // console.log(random_pos);
+    await delay(1000);
+    await walk_pet(random_pos);
+  }
+}
+
+
+async function run(){
+  await random_walk();
   console.log("Walked");
 }
 
 function main(){
   // Animation loop 
-  // const animationInterval = setInterval(() => {
-    
-  //   // clearInterval(animationInterval);
-  // }, pet.duration)
-
-  // intro_pet();
   run();
   
 }

@@ -29,7 +29,7 @@ body{
   gap: 5em;
 }
 #pet-container{
-  background-color: red;
+  /* background-color: red; */
   position: relative;
   width: 100%;
   display: flex;
