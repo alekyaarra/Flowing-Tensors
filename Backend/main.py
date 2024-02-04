@@ -32,10 +32,11 @@ async def create_upload_file(file: UploadFile = File(...)):
     with open(os.path.join("uploads", unique_filename + ".ogg"), "wb") as buffer:
         buffer.write(await file.read())
     file.close()    
-    audio = AudioSegment.from_ogg(os.path.join("uploads", unique_filename + ".ogg"))
-    audio.export(os.path.join("uploads", unique_filename + ".ogg"), format='wav')
+    #audio = AudioSegment.from_ogg(os.path.join("uploads", unique_filename + ".ogg"))
+    #audio.export(os.path.join("uploads", unique_filename + ".ogg"), format='wav')
     
-    return emo_pred(os.path.join("uploads", unique_filename + ".ogg"))
+    #return emo_pred(os.path.join("uploads", unique_filename + ".ogg"))
+    return 1
 
 
 
