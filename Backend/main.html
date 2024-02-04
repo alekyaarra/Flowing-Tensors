@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Audio Recorder</title>
+</head>
+<body>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+    <script>
+        const startButton = document.getElementById('start');
+        const stopButton = document.getElementById('stop');
+        let mediaRecorder;
+        let recordedChunks = [];
+        let isStoppedByUser = false;
+
+        function startRecording() {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.ondataavailable = e => recordedChunks.push(e.data);
+                    mediaRecorder.start();
+                    setTimeout(() => {
+                        if (!isStoppedByUser) {
+                            mediaRecorder.stop();
+                            startRecording(); // Restart recording after 10 seconds
+                        }
+                    }, 10000);
+                });
+        }
+
+        startButton.addEventListener('click', () => {
+            isStoppedByUser = false;
+            startRecording();
+        });
+
+        stopButton.addEventListener('click', () => {
+            isStoppedByUser = true;
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+            }
+            sendRecordedData();
+        });
+
+        function sendRecordedData() {
+    if (recordedChunks.length > 0) {
+        const blob = new Blob(recordedChunks, { type: 'audio/ogg' });
+        const formData = new FormData();
+        formData.append('file', blob, 'recording.ogg'); // 'file' is the expected field name in FastAPI
+        
+        fetch('http://127.0.0.1:8000/uploadfile/', {
+            method: 'POST',
+            body: formData
+        }).then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+        recordedChunks = [];
+    }
+}
+
+    </script>
+</body>
+</html>
