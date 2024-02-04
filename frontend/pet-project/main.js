@@ -191,7 +191,7 @@ async function bark_pet(){
 //? INACTIVE ANIMATION CONTROLLER
 async function inactive_animation_controller(){
   const autoModes = [random_walk, sleep_pet];
-  console.log(pet.autoMode.name, pet.autoDuration);
+  // console.log(pet.autoMode.name, pet.autoDuration);
   
   if(pet.autoDuration <= 0){
     // select random duration for auto mode
@@ -208,7 +208,7 @@ async function inactive_animation_controller(){
 
 //? ACTIVE ANIMATION CONTROLLER
 async function active_animation_controller(){
-  console.log("Active");
+  // console.log("Active");
   await bark_pet();
   await delay(500);
 }
@@ -279,22 +279,52 @@ main();
 //! MISC / SERVER STUFF
 const mic_button = document.getElementById("mic-button");
 let mic_start = false;
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.continuous = true;
 
-mic_button.addEventListener("mousedown", (e) => {
+function speech_to_text(){
+  recognition.lang = 'en-US'; // Set language code as needed
+
+  recognition.onstart = () => {
+    console.log('Speech recognition started...');
+  };
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    // document.getElementById('outputText').innerText = transcript;
+    console.log(transcript);
+  };
+
+  recognition.onerror = (event) => {
+    console.error('Speech recognition error:', event.error);
+  };
+
+  recognition.onend = () => {
+    console.log('Speech recognition ended...');
+  };
+
+  recognition.start();
+}
+
+
+
+mic_button.addEventListener("click", (e) => {
     //Toggle
     mic_button.classList.toggle("active");
-    
-    if(!mic_start){
+    mic_start = !mic_start;
+
+    if(mic_start){
         console.log("Started Recording...");
         pet.active = true;
+
+        speech_to_text();
     }
     else{
         console.log("Stopped Recording...");
         pet.active = false;
+
+        recognition.stop();
     }
-    
-    // Toggle
-    mic_start = !mic_start;
 })
 
 
