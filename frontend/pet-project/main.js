@@ -1,14 +1,17 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 
-const chatbox = document.getElementById("chatbox-text");
+const base_prompt = "Pretend that you are a really intelligent dog named Oreo, and respond to the user's input as such. Make sure your answers is very very small, no point-wise answer and do not include actions."
+
 
 const API_KEY = "AIzaSyAiI7S9eVXJyI6_2vxKqkWIblRZzrWi2og";
-
 const genAI = new GoogleGenerativeAI(API_KEY);
+const chatbox = document.getElementById("chatbox-text");
 
 async function pet_gemini(prompt) {
   // For text-only input, use the gemini-pro model
+  prompt = prompt + base_prompt;
+
   const model = genAI.getGenerativeModel({ model: "gemini-pro"});
 
   const result = await model.generateContent(prompt);
