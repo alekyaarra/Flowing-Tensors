@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ML Model Prediction</title>
+    <script>
+        window.onload = async function() {
+            // Replace with the URL of your FastAPI server and the file path you want to predict
+            const url = "http://127.0.0.1:8000/predict/";
+            
+
+            try {
+                // Call the GET endpoint with the file path as a query parameter
+                const response = await fetch(`${url}`);
+
+                // Check if the request was successful
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                // Parse the prediction from the response
+                const prediction = await response.json();
+
+                // Display the prediction on the page
+                const predictionElement = document.getElementById("prediction");
+                predictionElement.textContent = "Prediction: " + prediction;
+            } catch (error) {
+                console.error("There was a problem with the fetch operation:", error);
+            }
+        };
+    </script>
+</head>
+<body>
+    <h1>Machine Learning Model Prediction</h1>
+    <div id="prediction"></div>
+</body>
+</html>
