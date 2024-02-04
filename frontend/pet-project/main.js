@@ -1,3 +1,28 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+
+const chatbox = document.getElementById("chatbox-text");
+
+const API_KEY = "AIzaSyAiI7S9eVXJyI6_2vxKqkWIblRZzrWi2og";
+
+const genAI = new GoogleGenerativeAI(API_KEY);
+
+async function pet_gemini(prompt) {
+  // For text-only input, use the gemini-pro model
+  const model = genAI.getGenerativeModel({ model: "gemini-pro"});
+
+  const result = await model.generateContent(prompt);
+  const response = await result.response;
+  const text = response.text();
+
+  chatbox.innerText = text;
+  setTimeout(() => {
+    pet.active = false;
+    // chatbox.innerHTML = "Feel free to open up to me!";
+  }, 5000);
+}
+
+
 //! Global vars
 const animation_durations = {
   "angry": 1100,
@@ -293,6 +318,7 @@ function speech_to_text(){
     const transcript = event.results[0][0].transcript;
     // document.getElementById('outputText').innerText = transcript;
     console.log(transcript);
+    pet_gemini(transcript);
   };
 
   recognition.onerror = (event) => {
@@ -305,7 +331,6 @@ function speech_to_text(){
 
   recognition.start();
 }
-
 
 
 mic_button.addEventListener("click", (e) => {
@@ -321,13 +346,11 @@ mic_button.addEventListener("click", (e) => {
     }
     else{
         console.log("Stopped Recording...");
-        pet.active = false;
+        // pet.active = false;
 
         recognition.stop();
     }
 })
-
-
 
 
 

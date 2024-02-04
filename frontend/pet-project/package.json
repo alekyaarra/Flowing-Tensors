@@ -12,6 +12,7 @@
     "vite": "^4.3.9"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.2.0",
     "axios": "^1.6.7"
   }
 }

@@ -14,10 +14,25 @@
         
         <div id="emote-container"></div>
       </div>
-      <div id="chatbox">
+      <div class="chatbox-container">
+        <div id="chatbox">
+          <p id="chatbox-text">
+            Hello, User !
+          </p>
+        </div>
         <img id="mic-button" class="inactive" src="./assets/mic.svg" alt="mic">
       </div>
     </div>
+
+    <!-- Gemini Import -->
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+    </script>
+
     <script type="module" src="/main.js"></script>
   </body>
 </html>
