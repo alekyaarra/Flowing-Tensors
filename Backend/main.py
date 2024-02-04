@@ -2,11 +2,15 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import uuid
-from test import emo_pred
+from test import emotion_model
 app = FastAPI()
-from pydub import AudioSegment
+#from pydub import AudioSegment
 import numpy as np
-file_path=[...] #list of audio files we has
+file_path=[] #list of audio files we has
+for a in os.listdir('files'):
+    file_path.append(f"files/{a}")
+
+temp =len(file_path)
 
 origins = [
     "http://127.0.0.1:5500"
@@ -52,7 +56,7 @@ async def get_prediction():
     Any: The prediction for the given file.
     """
     # Process the file and get the prediction
-    num=np.random.randint(0,10)
-    prediction = emo_pred(file_path[num])
+    num=np.random.randint(0,temp)
+    prediction = emotion_model(file_path[num])
     return prediction
 
