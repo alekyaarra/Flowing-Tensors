@@ -22,6 +22,39 @@ function get_gif(name){
 const dev_header = document.getElementById("dev-header");
 
 
+//! Float Emotes
+function create_emote(className, source){
+  let emote = document.createElement("img");
+  emote.classList.add("emote");
+  emote.classList.add(className);
+  emote.src = source;
+  return emote;
+}
+
+function emote_pet(happy = true){
+  if (happy){
+    console.log("WORKING");
+    let emotes = [
+      create_emote("float-up", animation_path + "happy_emote.png"),
+      create_emote("float-up", animation_path + "happy_emote.png"),
+      create_emote("float-up", animation_path + "happy_emote.png")
+    ]
+    for (let i = 0; i < 3; i++){
+      document.getElementById("emote-container").appendChild(emotes[i]);
+
+      const randX = Math.ceil(Math.random() * 200) - 20
+      const randY = -1 * Math.ceil(Math.random() * 50)
+      emotes[i].style.left = `${randX}px`;
+      emotes[i].style.top = `${randY}px`;
+
+      setTimeout(() => {
+        document.getElementById("emote-container").removeChild(emotes[i])
+      }, 2000)
+    }
+  }
+}
+
+
 //! Pet vars
 const pet = {
   "img": document.createElement("img"),
@@ -34,6 +67,7 @@ const pet = {
   "autoMode": "none",
 };
 
+pet.img.id = "pet";
 pet.img.src = get_gif(pet.current);
 pet.img.style.width = "160px";
 
