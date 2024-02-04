@@ -62,7 +62,7 @@ const pet = {
   "duration": animation_durations["idle"],
   "pos": 0,
   "active": false,
-  "bark": true,
+  "bark": false,
   "autoDuration": 0,
   "autoMode": "none",
 };
@@ -195,7 +195,7 @@ async function inactive_animation_controller(){
   
   if(pet.autoDuration <= 0){
     // select random duration for auto mode
-    pet.autoDuration = Math.ceil(Math.random() * 4);
+    pet.autoDuration = Math.ceil(Math.random() * 2) + 2;
     // select Random auto mode
     let randomMode = Math.floor(Math.random() * autoModes.length);
     pet.autoMode = autoModes[randomMode];
@@ -267,12 +267,36 @@ function main(){
 }
 main();
 
-window.addEventListener("mousedown", () => {
-  pet.active = true;
+// window.addEventListener("mousedown", () => {
+//   pet.active = true;
+// })
+// window.addEventListener("mouseup", () => {
+//   pet.active = false;
+// })
+
+
+
+//! MISC / SERVER STUFF
+const mic_button = document.getElementById("mic-button");
+let mic_start = false;
+
+mic_button.addEventListener("mousedown", (e) => {
+    //Toggle
+    mic_button.classList.toggle("active");
+    
+    if(!mic_start){
+        console.log("Started Recording...");
+        pet.active = true;
+    }
+    else{
+        console.log("Stopped Recording...");
+        pet.active = false;
+    }
+    
+    // Toggle
+    mic_start = !mic_start;
 })
-window.addEventListener("mouseup", () => {
-  pet.active = false;
-})
+
 
 
 

@@ -31,7 +31,7 @@ body{
   justify-content: center;
   align-items: center;
   flex-direction: column; 
-  gap: 3em;
+  gap: 4em;
 }
 
 
@@ -43,17 +43,15 @@ body{
   justify-content: center;
 }
 
-.chatbox-container{
-  /* position: sticky; */
-  position: absolute;
-  bottom: 5%;
-
-}
 #chatbox{
+  position: absolute;
+  bottom: 2.5vh;
   width: 60vw;
-  height: 2.5em;
-  background: white;
+  height: 8em;
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 1em;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 #pet{
@@ -68,6 +66,30 @@ body{
   position: absolute;
   
   width: 60px;
+}
+
+#mic-button{
+  height: 60px;
+  width: 60px;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  position: absolute;
+  right: -50px;
+  top: -50px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  transition: all 100ms ease-in;
+}
+#mic-button:hover{
+  border: 1px solid rgba(255, 255, 255, 1);
+}
+
+#mic-button.inactive{
+  background: rgba(0, 0, 0, 0.5);
+}
+#mic-button.active{
+  background: red;
 }
 
 
