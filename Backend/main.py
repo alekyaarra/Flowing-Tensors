@@ -2,8 +2,11 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import uuid
-
+from test import emo_pred
 app = FastAPI()
+from pydub import AudioSegment
+import numpy as np
+file_path=[...] #list of audio files we has
 
 origins = [
     "http://127.0.0.1:5500"
@@ -28,5 +31,28 @@ async def create_upload_file(file: UploadFile = File(...)):
     # Save the file with the unique filename
     with open(os.path.join("uploads", unique_filename + ".ogg"), "wb") as buffer:
         buffer.write(await file.read())
+    file.close()    
+    #audio = AudioSegment.from_ogg(os.path.join("uploads", unique_filename + ".ogg"))
+    #audio.export(os.path.join("uploads", unique_filename + ".ogg"), format='wav')
     
-    return {"filename": unique_filename}
+    #return emo_pred(os.path.join("uploads", unique_filename + ".ogg"))
+    return 1
+
+
+
+@app.get("/predict/")
+async def get_prediction():
+    """
+    Get a prediction for a given file.
+
+    Parameters:
+    file_path (str): The file path to process.
+
+    Returns:
+    Any: The prediction for the given file.
+    """
+    # Process the file and get the prediction
+    num=np.random.randint(0,10)
+    prediction = emo_pred(file_path[num])
+    return prediction
+
